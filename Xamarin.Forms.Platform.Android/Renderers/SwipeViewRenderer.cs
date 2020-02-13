@@ -27,8 +27,7 @@ namespace Xamarin.Forms.Platform.Android
 {
 	public class SwipeViewRenderer : ViewRenderer<SwipeView, AView>, GestureDetector.IOnGestureListener
 	{
-		const int SwipeThreshold = 250;
-		const int SwipeThresholdMargin = 0;
+		const int DefaultSwipeThreshold = 250;
 		const int SwipeItemWidth = 100;
 		const long SwipeAnimationDuration = 200;
 		const float SwipeMinimumDelta = 10f;
@@ -55,11 +54,12 @@ namespace Xamarin.Forms.Platform.Android
 		public SwipeViewRenderer(Context context) : base(context)
 		{
 			SwipeView.VerifySwipeViewFlagEnabled(nameof(SwipeViewRenderer));
+
 			_context = context;
 
-			AutoPackage = false;
+			this.SetClipToOutline(true);
 
-			this.SetClipToOutline(true, Element);
+			AutoPackage = false;
 		}
 
 		protected override void OnElementChanged(ElementChangedEventArgs<SwipeView> e)
@@ -142,7 +142,7 @@ namespace Xamarin.Forms.Platform.Android
 			else
 				Control.SetWindowBackground();
 
-			if (_contentView.Background == null)
+			if (_contentView != null && _contentView.Background == null)
 				_contentView?.SetWindowBackground();
 		}
 
@@ -952,8 +952,12 @@ namespace Xamarin.Forms.Platform.Android
 
 		float GetSwipeThreshold(SwipeItems swipeItems)
 		{
-			float swipeThreshold = 0;
+			double threshold = Element.Threshold;
 
+			if (threshold > 0)
+				return (float)threshold;
+
+			float swipeThreshold = 0;
 			bool isHorizontal = IsHorizontalSwipe();
 
 			if (swipeItems.Mode == SwipeMode.Reveal)
@@ -976,7 +980,7 @@ namespace Xamarin.Forms.Platform.Android
 				else
 				{
 					var contentHeight = (float)_context.FromPixels(_contentView.Height);
-					swipeThreshold = (SwipeThreshold > contentHeight) ? contentHeight : SwipeThreshold;
+					swipeThreshold = (DefaultSwipeThreshold > contentHeight) ? contentHeight : DefaultSwipeThreshold;
 				}
 			}
 
@@ -992,7 +996,7 @@ namespace Xamarin.Forms.Platform.Android
 				return swipeThreshold;
 			}
 
-			return SwipeThreshold;
+			return DefaultSwipeThreshold;
 		}
 
 		float ValidateSwipeThreshold(float swipeThreshold)
@@ -1006,37 +1010,44 @@ namespace Xamarin.Forms.Platform.Android
 				if (swipeThreshold > contentWidth)
 					swipeThreshold = contentWidth;
 
-				return swipeThreshold - SwipeThresholdMargin;
+				return swipeThreshold;
 			}
 
 			if (swipeThreshold > contentHeight)
 				swipeThreshold = contentHeight;
 
-			return swipeThreshold - SwipeThresholdMargin / 2;
+			return swipeThreshold;
 		}
 
 		Size GetSwipeItemSize(ISwipeItem swipeItem)
 		{
 			bool isHorizontal = IsHorizontalSwipe();
 			var items = GetSwipeItemsByDirection();
+
+			double threshold = Element.Threshold;
 			var contentHeight = _context.FromPixels(_contentView.Height);
 			var contentWidth = _context.FromPixels(_contentView.Width);
 
 			if (isHorizontal)
 			{
 				if (swipeItem is SwipeItem)
-					return new Size(items.Mode == SwipeMode.Execute ? contentWidth / items.Count : SwipeItemWidth, contentHeight);
+				{
+					return new Size(items.Mode == SwipeMode.Execute ? (threshold > 0 ? threshold : contentWidth) / items.Count : (threshold < SwipeItemWidth ? SwipeItemWidth : threshold), contentHeight);
+				}
 
 				if (swipeItem is SwipeItemView horizontalSwipeItemView)
 				{
 					var swipeItemViewSizeRequest = horizontalSwipeItemView.Measure(double.PositiveInfinity, double.PositiveInfinity, MeasureFlags.IncludeMargins);
-					return new Size(swipeItemViewSizeRequest.Request.Width > 0 ? (float)swipeItemViewSizeRequest.Request.Width : SwipeItemWidth, contentHeight);
+					return new Size(swipeItemViewSizeRequest.Request.Width > 0 ? (float)swipeItemViewSizeRequest.Request.Width : ((threshold > 0 && threshold < SwipeItemWidth) ? SwipeItemWidth : threshold), contentHeight);
 				}
 			}
 			else
 			{
 				if (swipeItem is SwipeItem)
-					return new Size(contentWidth / items.Count, GetSwipeItemHeight());
+				{
+					var swipeItemHeight = GetSwipeItemHeight();
+					return new Size(contentWidth / items.Count, (threshold > 0 && threshold < swipeItemHeight) ? threshold : swipeItemHeight);
+				}
 
 				if (swipeItem is SwipeItemView horizontalSwipeItemView)
 				{

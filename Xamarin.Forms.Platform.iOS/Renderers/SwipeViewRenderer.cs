@@ -14,7 +14,6 @@ namespace Xamarin.Forms.Platform.iOS
 	public class SwipeViewRenderer : ViewRenderer<SwipeView, UIView>
 	{
 		const double SwipeThreshold = 250;
-		const int SwipeThresholdMargin = 0;
 		const double SwipeItemWidth = 100;
 		const double SwipeAnimationDuration = 0.2;
 		const double SwipeMinimumDelta = 10;
@@ -294,10 +293,8 @@ namespace Xamarin.Forms.Platform.iOS
 			}
 			else
 			{
-				var content = Subviews.FirstOrDefault(v => v is Platform.DefaultRenderer);
-
-				if (content != null)
-					_contentView = content;
+				if (Subviews.Length > 0)
+					_contentView = Subviews[0];
 			}
 		}
 
@@ -853,8 +850,12 @@ namespace Xamarin.Forms.Platform.iOS
 
 		double GetSwipeThreshold(SwipeItems swipeItems)
 		{
-			double swipeThreshold = 0;
-   
+			var threshold = Element.Threshold;
+
+			if (threshold > 0)
+				return threshold;
+
+			double swipeThreshold = 0; 
 			bool isHorizontal = IsHorizontalSwipe();
 
 			if (swipeItems.Mode == SwipeMode.Reveal)
@@ -903,39 +904,48 @@ namespace Xamarin.Forms.Platform.iOS
 				if (swipeThreshold > _contentView.Frame.Width)
 					swipeThreshold = _contentView.Frame.Width;
 
-				return swipeThreshold - SwipeThresholdMargin;
+				return swipeThreshold;
 			}
 
 			if (swipeThreshold > _contentView.Frame.Height)
 				swipeThreshold = _contentView.Frame.Height;
 
-			return swipeThreshold - SwipeThresholdMargin / 2;
+			return swipeThreshold;
 		}
 
 		Size GetSwipeItemSize(ISwipeItem swipeItem)
 		{
 			var items = GetSwipeItemsByDirection();
 
+			double threshold = Element.Threshold;
+			var contentHeight = _contentView.Frame.Height;
+			var contentWidth = _contentView.Frame.Width;
+
 			if (IsHorizontalSwipe())
 			{
 				if (swipeItem is SwipeItem)
-					return new Size(items.Mode == SwipeMode.Execute ? _contentView.Frame.Width / items.Count : SwipeItemWidth, _contentView.Frame.Height);
+				{
+					return new Size(items.Mode == SwipeMode.Execute ? (threshold > 0 ? threshold : contentWidth) / items.Count : (threshold < SwipeItemWidth ? SwipeItemWidth : threshold), contentHeight);
+				}
 
 				if (swipeItem is SwipeItemView horizontalSwipeItemView)
 				{
 					var swipeItemViewSizeRequest = horizontalSwipeItemView.Measure(double.PositiveInfinity, double.PositiveInfinity, MeasureFlags.IncludeMargins);
-					return new Size(swipeItemViewSizeRequest.Request.Width > 0 ? (float)swipeItemViewSizeRequest.Request.Width : SwipeItemWidth, _contentView.Frame.Height);
+					return new Size(swipeItemViewSizeRequest.Request.Width > 0 ? (float)swipeItemViewSizeRequest.Request.Width : ((threshold > 0 && threshold < SwipeItemWidth) ? SwipeItemWidth : threshold), contentHeight);
 				}
 			}
 			else
 			{
 				if (swipeItem is SwipeItem)
-					return new Size(_contentView.Frame.Width / items.Count, GetSwipeItemHeight()); 
+				{
+					var swipeItemHeight = GetSwipeItemHeight();
+					return new Size(contentWidth / items.Count, (threshold > 0 && threshold < swipeItemHeight) ? threshold : swipeItemHeight);
+				}
 
 				if (swipeItem is SwipeItemView horizontalSwipeItemView)
 				{
 					var swipeItemViewSizeRequest = horizontalSwipeItemView.Measure(double.PositiveInfinity, double.PositiveInfinity, MeasureFlags.IncludeMargins);
-					return new Size(_contentView.Frame.Width / items.Count, swipeItemViewSizeRequest.Request.Height > 0 ? (float)swipeItemViewSizeRequest.Request.Height : _contentView.Frame.Height);
+					return new Size(contentWidth / items.Count, swipeItemViewSizeRequest.Request.Height > 0 ? (float)swipeItemViewSizeRequest.Request.Height : contentHeight);
 				}
 			}
 
