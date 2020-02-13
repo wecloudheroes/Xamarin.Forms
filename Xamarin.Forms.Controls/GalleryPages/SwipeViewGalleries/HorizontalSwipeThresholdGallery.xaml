@@ -50,6 +50,7 @@
                         Mode="Reveal">
                         <SwipeItem
                             BackgroundColor="{StaticResource SwipeItemBackgroundColor}"
+                            Icon="calculator.png"
                             Text="SwipeItem"/>
                     </SwipeItems>
                 </SwipeView.RightItems>
@@ -92,6 +93,7 @@
                         Mode="Reveal">
                         <SwipeItem
                             BackgroundColor="{StaticResource SwipeItemBackgroundColor}"
+                            Icon="calculator.png"
                             Text="SwipeItem"/>
                     </SwipeItems>
                 </SwipeView.RightItems>
@@ -123,6 +125,7 @@
                         Mode="Execute">
                         <SwipeItem
                             BackgroundColor="{StaticResource SwipeItemBackgroundColor}"
+                            Icon="calculator.png"
                             Text="SwipeItem"/>
                     </SwipeItems>
                 </SwipeView.RightItems>
@@ -165,6 +168,7 @@
                         Mode="Execute">
                         <SwipeItem
                             BackgroundColor="{StaticResource SwipeItemBackgroundColor}"
+                            Icon="calculator.png"
                             Text="SwipeItem"/>
                     </SwipeItems>
                 </SwipeView.RightItems>
