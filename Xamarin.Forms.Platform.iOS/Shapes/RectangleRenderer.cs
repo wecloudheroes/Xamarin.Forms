@@ -11,6 +11,8 @@ namespace Xamarin.Forms.Platform.MacOS
 {
     public class RectangleRenderer : ShapeRenderer<Rect, RectView>
     {
+        const double MaximumRadius = 0.5d;
+
         protected override void OnElementChanged(ElementChangedEventArgs<Rect> args)
         {
             if (Control == null)
@@ -39,12 +41,22 @@ namespace Xamarin.Forms.Platform.MacOS
 
         void UpdateRadiusX()
         {
-            Control.UpdateRadiusX(Element.RadiusX / Element.WidthRequest);
+            var radiusX = ValidateRadius(Element.RadiusX / Element.WidthRequest);
+            Control.UpdateRadiusX(radiusX);
         }
 
         void UpdateRadiusY()
         {
-            Control.UpdateRadiusY(Element.RadiusY / Element.HeightRequest);
+            var radiusY = ValidateRadius(Element.RadiusY / Element.HeightRequest);
+            Control.UpdateRadiusY(radiusY);
+        }
+
+        double ValidateRadius(double radius)
+        {
+            if (radius > MaximumRadius)
+                radius = MaximumRadius;
+
+            return radius;
         }
     }
 
