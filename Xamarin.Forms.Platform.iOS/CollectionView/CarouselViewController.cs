@@ -270,7 +270,7 @@ namespace Xamarin.Forms.Platform.iOS
 				}
 
 				if (position > 0)
-					ScrollToPosition(position, Carousel.Position, Carousel.AnimatePositionChanges, true);
+					ScrollToPosition(position, Carousel.Position, false, true);
 			}
 
 			UpdateVisualStates();
