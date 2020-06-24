@@ -277,7 +277,7 @@ namespace Xamarin.Forms.Platform.UWP
 			}
 
 			SetCurrentItem(position);
-			UpdatePosition(position);
+			Carousel.ScrollTo(position, position: ScrollToPosition.Center, animate: Carousel.AnimateInitialPosition);
 		}
 
 		void UpdatePositionFromScroll()
