@@ -16,8 +16,10 @@
             BackgroundColor="Black"
             TextColor="White"
             Text="If the selected Item is the Item 2, directly without animations, the test has passed."/>
+        <!-- AnimateInitialPosition is False by default-->
         <CarouselView
             Grid.Row="1"
+            AnimateInitialPosition="False"
             Position="1">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
