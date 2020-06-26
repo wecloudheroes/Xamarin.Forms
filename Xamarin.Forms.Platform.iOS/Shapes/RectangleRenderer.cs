@@ -13,6 +13,12 @@ namespace Xamarin.Forms.Platform.MacOS
     {
         const double MaximumRadius = 0.5d;
 
+        [Internals.Preserve(Conditional = true)]
+        public RectangleRenderer()
+        {
+
+        }
+
         protected override void OnElementChanged(ElementChangedEventArgs<Rect> args)
         {
             if (Control == null)
