@@ -157,7 +157,7 @@ namespace Xamarin.Forms.Material.Android
 		void UpdateBackground()
 		{
 			if (Element != null && _control != null)
-				_control.SetBackground(Element.BackgroundColor, Element.Background);
+				_control.SetBackground(Element.BackgroundColor, Element.Background, Element.FlowDirection);
 		}
 
 		// IVisualElementRenderer

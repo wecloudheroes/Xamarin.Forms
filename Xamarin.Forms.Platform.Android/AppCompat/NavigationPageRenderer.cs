@@ -395,7 +395,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 			if (e.PropertyName == NavigationPage.BarBackgroundColorProperty.PropertyName)
 				UpdateToolbar();
-			else if (e.PropertyName == NavigationPage.BarBackgroundProperty.PropertyName)
+			else if (e.IsOneOf(NavigationPage.BarBackgroundProperty, VisualElement.FlowDirectionProperty))
 				UpdateToolbar();
 			else if (e.PropertyName == NavigationPage.BarTextColorProperty.PropertyName)
 				UpdateToolbar();
@@ -1019,8 +1019,8 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				}
 			}
 
-			Brush barBackground = Element.BarBackground;
-			bar.UpdateBackground(barBackground);
+			BrushData brushData = new BrushData(Element.BarBackground, Element.FlowDirection);
+			bar.UpdateBackground(brushData);
 
 			Color textColor = Element.BarTextColor;
 			if (!textColor.IsDefault)

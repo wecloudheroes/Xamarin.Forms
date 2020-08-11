@@ -138,7 +138,8 @@ namespace Xamarin.Forms.Platform.Android
 				Shell.FlyoutBackgroundColorProperty,
 				Shell.FlyoutBackgroundProperty,
 				Shell.FlyoutBackgroundImageProperty,
-				Shell.FlyoutBackgroundImageAspectProperty))
+				Shell.FlyoutBackgroundImageAspectProperty,
+				VisualElement.FlowDirectionProperty))
 				UpdateFlyoutBackground();
 			else if (e.Is(Shell.FlyoutVerticalScrollModeProperty))
 				UpdateVerticalScrollMode();
@@ -199,8 +200,11 @@ namespace Xamarin.Forms.Platform.Android
 				_rootView.Background = color.IsDefault ? _defaultBackgroundColor : new ColorDrawable(color.ToAndroid());
 			}
 			else
-				_rootView.UpdateBackground(brush);
-			
+			{
+				BrushData brushData = new BrushData(brush, _shellContext.Shell.FlowDirection);
+				_rootView.UpdateBackground(brushData);
+			}
+
 			UpdateFlyoutBgImageAsync();
 		}
 
