@@ -313,7 +313,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void OnHandlePropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == VisualElement.BackgroundColorProperty.PropertyName || e.PropertyName == VisualElement.BackgroundProperty.PropertyName)
+			if (e.PropertyName == VisualElement.BackgroundColorProperty.PropertyName || e.PropertyName == VisualElement.BackgroundProperty.PropertyName || e.PropertyName == VisualElement.FlowDirectionProperty.PropertyName)
 				UpdateBackground();
 			else if (e.PropertyName == Page.BackgroundImageSourceProperty.PropertyName)
 				UpdateBackground();
@@ -515,7 +515,10 @@ namespace Xamarin.Forms.Platform.iOS
 					Brush background = Element.Background;
 
 					if (!Brush.IsNullOrEmpty(background))
-						NativeView.UpdateBackground(Element.Background);
+					{
+						BrushData brushData = new BrushData(background, Element.FlowDirection);
+						NativeView.UpdateBackground(brushData);
+					}
 					else
 					{
 						Color backgroundColor = Element.BackgroundColor;

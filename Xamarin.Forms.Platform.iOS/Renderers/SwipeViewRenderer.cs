@@ -150,7 +150,7 @@ namespace Xamarin.Forms.Platform.iOS
 				UpdateContent();
 			else if (e.PropertyName == VisualElement.BackgroundColorProperty.PropertyName)
 				SetBackgroundColor(Element.BackgroundColor);
-			else if (e.PropertyName == VisualElement.BackgroundProperty.PropertyName)
+			else if (e.PropertyName == VisualElement.BackgroundProperty.PropertyName || e.PropertyName == VisualElement.FlowDirectionProperty.PropertyName)
 				SetBackground(Element.Background);
 			else if (e.PropertyName == VisualElement.IsEnabledProperty.PropertyName)
 				UpdateIsSwipeEnabled();
@@ -178,13 +178,13 @@ namespace Xamarin.Forms.Platform.iOS
 
 		protected override void SetBackground(Brush brush)
 		{
-			Brush background = Element.Background;
+			BrushData brushData = new BrushData(Element.Background, Element.FlowDirection);
 
 			if (Control != null)
-				Control.UpdateBackground(background);
+				Control.UpdateBackground(brushData);
 
 			if (_contentView != null && Element.Content == null && HasSwipeItems())
-				_contentView.UpdateBackground(background);
+				_contentView.UpdateBackground(brushData);
 		}
 
 		public override void TouchesEnded(NSSet touches, UIEvent evt)
