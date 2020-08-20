@@ -184,7 +184,7 @@ namespace Xamarin.Forms.Platform.Android
 				UpdateInputTransparent();
 				UpdateBackgroundColor();
 				UpdateIsChecked();
-				UpdateText();
+				UpdateContent();
 				ElevationHelper.SetElevation(this, e.NewElement);
 			}
 
@@ -211,7 +211,7 @@ namespace Xamarin.Forms.Platform.Android
 			}
 			else if (e.PropertyName == RadioButton.ContentProperty.PropertyName)
 			{
-				UpdateText();
+				UpdateContent();
 			}
 
 			ElementPropertyChanged?.Invoke(this, e);
@@ -308,17 +308,14 @@ namespace Xamarin.Forms.Platform.Android
 			Checked = ((RadioButton)Element).IsChecked;
 		}
 
-		void UpdateText()
+		void UpdateContent()
 		{
 			if (Element == null || Control == null)
 			{
 				return;
 			}
 
-			if (Element.Content is string content)
-			{
-				Control.Text = content;
-			}
+			Control.Text = Element.Content.ToString();
 		}
 
 		void IOnCheckedChangeListener.OnCheckedChanged(CompoundButton buttonView, bool isChecked)
