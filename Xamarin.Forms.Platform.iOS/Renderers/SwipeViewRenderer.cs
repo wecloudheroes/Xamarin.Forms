@@ -772,9 +772,6 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			_isTouchDown = false;
 
-			if (CanProcessTouchSwipeItems(point))
-				ProcessTouchSwipeItems(point);
-
 			if (!_isSwiping)
 				return;
 
