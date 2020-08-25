@@ -24,6 +24,30 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 	public class NavigationPageTests : PlatformTestFixture
 	{
 		[Test, Category("NavigationPage")]
+		[Description("Pushing initial page before NavigationPageRenderer is attached leaves renderer in confused state")]
+		public async Task PushInitialPageBeforeAttachingToWindowBreaksApp()
+		{
+			await Device.InvokeOnMainThreadAsync(async () =>
+			{
+				var navPage = new NavigationPage();
+				TestActivity testSurface = null;
+				try
+				{
+					testSurface = await TestActivity.GetTestSurface(Context, navPage);
+					await navPage.PushAsync(new ContentPage());
+					await testSurface.WindowAttachedTask;
+					await navPage.PushAsync(new ContentPage());
+					var manager = testSurface.GetFragmentManager();
+					Assert.AreEqual(2, manager.Fragments.Count);
+				}
+				finally
+				{
+					testSurface?.Finish();
+				}
+			});
+		}
+
+		[Test, Category("NavigationPage")]
 		[Description("Pushing page before NavigationPageRenderer is attached leaves renderer in confused state")]
 		public async Task PagePushedBeforeAttachingToWindowBreaksApp()
 		{

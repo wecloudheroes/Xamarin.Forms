@@ -650,7 +650,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 		void OnPushed(object sender, NavigationRequestedEventArgs e)
 		{
-			if (!_isAttachedToWindow)
+			if (_fragmentStack.Count == 0)
 			{
 				e.Task = PushCurrentPagesAsync();
 			}
