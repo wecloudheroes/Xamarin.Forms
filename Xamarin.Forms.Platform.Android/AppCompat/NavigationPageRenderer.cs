@@ -1179,6 +1179,9 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				pagePushes.Add(PushViewAsync(page, false));
 			}
 
+			if (pagePushes.Count == 0)
+				return Task.FromResult(true);
+
 			return 
 				Task.WhenAll(pagePushes)
 					.ContinueWith(r =>
