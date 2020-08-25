@@ -610,7 +610,10 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		void OnPopped(object sender, NavigationRequestedEventArgs e)
 		{
 			if (_fragmentStack.Count == 0)
+			{
+				e.Task = Task.FromResult(true);
 				return;
+			}
 
 			e.Task = PopViewAsync(e.Page, e.Animated);
 		}
@@ -618,7 +621,10 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		void OnPoppedToRoot(object sender, NavigationRequestedEventArgs e)
 		{
 			if (_fragmentStack.Count == 0)
+			{
+				e.Task = Task.FromResult(true);
 				return;
+			}
 
 			e.Task = PopToRootAsync(e.Page, e.Animated);
 		}
