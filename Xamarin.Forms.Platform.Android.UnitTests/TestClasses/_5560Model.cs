@@ -28,13 +28,11 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 			set
 			{
 				_text = value;
-
-				if (!TestCompleted)
-					OnPropertyChanged(nameof(Text));
-
 				_textChangedCounter++;
 				if (_textChangedCounter > 100)
 					MarkTestCompleted();
+				else
+					OnPropertyChanged(nameof(Text));
 			}
 		}
 
@@ -48,13 +46,20 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 
 		public void MarkTestCompleted()
 		{
-			// because this model is reused by multiple controls it can sometimes cause a ping pong effect
-			// where multiple controls are updating the model and then the model is re-updating those controls
-			// which then re-update the model
-			TestCompleted = true;
-			_bindingContext = null;
-			OnPropertyChanged(nameof(BindingContext));
-			_testCompleted.SetResult(true);
+			try
+			{
+				// because this model is reused by multiple controls it can sometimes cause a ping pong effect
+				// where multiple controls are updating the model and then the model is re-updating those controls
+				// which then re-update the model
+				TestCompleted = true;
+				_bindingContext = null;
+				// OnPropertyChanged(nameof(BindingContext));
+				_testCompleted.SetResult(true);
+			}
+			catch
+			{
+				throw;
+			}
 		}
 
 		bool TestCompleted { get; set; }
