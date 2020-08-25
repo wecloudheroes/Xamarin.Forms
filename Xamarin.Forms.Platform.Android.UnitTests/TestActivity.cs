@@ -22,13 +22,13 @@ using AToolbar = Android.Support.V7.Widget.Toolbar;
 namespace Xamarin.Forms.Platform.Android.UnitTests
 {
 	[Preserve(AllMembers = true)]
-    [Activity(Label = "TestActivity", Icon = "@drawable/icon", Theme = "@style/MyTheme",
-        MainLauncher = false, HardwareAccelerated = true,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.UiMode)]
-    public class TestActivity : AppCompatActivity
-    {
-        public static SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
-        public static TaskCompletionSource<TestActivity> Surface { get; set; }
+	[Activity(Label = "TestActivity", Icon = "@drawable/icon", Theme = "@style/MyTheme",
+		MainLauncher = false, HardwareAccelerated = true,
+		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.UiMode)]
+	public class TestActivity : AppCompatActivity
+	{
+		public static SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+		public static TaskCompletionSource<TestActivity> Surface { get; set; }
 
 		TestLinearLayoutCompat _linearLayoutCompat;
 		TaskCompletionSource<bool> _windowAttached = new TaskCompletionSource<bool>();
@@ -37,41 +37,41 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 		public Task<bool> WindowDetachedTask => _windowDetached.Task;
 		VisualElement Element { get; set; }
 		protected override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
+		{
+			base.OnCreate(savedInstanceState);
 
 			_linearLayoutCompat = new TestLinearLayoutCompat(this);
 
-			SetContentView(_linearLayoutCompat, 
+			SetContentView(_linearLayoutCompat,
 				new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MatchParent, LinearLayoutCompat.LayoutParams.MatchParent));
-			
+
 			var bar = LayoutInflater.Inflate(FormsAppCompatActivity.ToolbarResource, null).JavaCast<AToolbar>();
-            SetSupportActionBar(bar);
-        }
+			SetSupportActionBar(bar);
+		}
 
-        public static async Task<TestActivity> GetTestSurface(Context context, VisualElement visualElement)
-        {
+		public static async Task<TestActivity> GetTestSurface(Context context, VisualElement visualElement)
+		{
 			await semaphore.WaitAsync();
-            Surface = new TaskCompletionSource<TestActivity>();
-            Intent intent = new Intent(context, typeof(TestActivity));
-            context.StartActivity(intent);
-            var result = await Surface.Task;
+			Surface = new TaskCompletionSource<TestActivity>();
+			Intent intent = new Intent(context, typeof(TestActivity));
+			context.StartActivity(intent);
+			var result = await Surface.Task;
 
-            if(visualElement != null)
+			if (visualElement != null)
 			{
 				result.Element = visualElement;
 				visualElement.Parent = new Application();
-                var renderer = Platform.CreateRendererWithContext(visualElement, result);
+				var renderer = Platform.CreateRendererWithContext(visualElement, result);
 
 				renderer.View.ViewAttachedToWindow += result.OnViewAttachedToWindow;
 				renderer.View.ViewDetachedFromWindow += result.OnViewDetachedToWindow;
 
 				Platform.SetRenderer(visualElement, renderer);
-                result._linearLayoutCompat.AddView(renderer.View, new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MatchParent, LinearLayoutCompat.LayoutParams.MatchParent));
-            }
+				result._linearLayoutCompat.AddView(renderer.View, new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MatchParent, LinearLayoutCompat.LayoutParams.MatchParent));
+			}
 
-            return result;
-        }
+			return result;
+		}
 
 		void OnViewDetachedToWindow(object sender, global::Android.Views.View.ViewDetachedFromWindowEventArgs e)
 		{
@@ -91,7 +91,7 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 
 		public override void Finish()
 		{
-			if(Element != null)
+			if (Element != null)
 			{
 				Element.Parent = null;
 				Platform.SetRenderer(Element, null);
@@ -109,9 +109,9 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 		}
 
 		protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            semaphore.Release();
+		{
+			base.OnDestroy();
+			semaphore.Release();
 		}
 
 		protected override void OnResume()
