@@ -46,27 +46,20 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 
 		public void MarkTestCompleted()
 		{
-			try
-			{
-				// because this model is reused by multiple controls it can sometimes cause a ping pong effect
-				// where multiple controls are updating the model and then the model is re-updating those controls
-				// which then re-update the model
-				TestCompleted = true;
-				_bindingContext = null;
-				// OnPropertyChanged(nameof(BindingContext));
-				_testCompleted.SetResult(true);
-			}
-			catch
-			{
-				throw;
-			}
+			// because this model is reused by multiple controls it can sometimes cause a ping pong effect
+			// where multiple controls are updating the model and then the model is re-updating those controls
+			// which then re-update the model
+			TestCompleted = true;
+			_bindingContext = null;
+			OnPropertyChanged(nameof(BindingContext));
+			_testCompleted.SetResult(true);
 		}
 
 		bool TestCompleted { get; set; }
 
 		public Task WaitForTestToComplete()
 		{
-			return Task.WhenAny( new Task[] { _testCompleted.Task, Task.Delay(3000) });
+			return Task.WhenAny(new Task[] { _testCompleted.Task, Task.Delay(3000) });
 		}
 	}
 }

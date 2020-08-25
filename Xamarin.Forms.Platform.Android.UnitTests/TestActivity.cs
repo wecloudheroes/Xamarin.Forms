@@ -60,7 +60,9 @@ namespace Xamarin.Forms.Platform.Android.UnitTests
 			if (visualElement != null)
 			{
 				result.Element = visualElement;
+				var maintainApp = Xamarin.Forms.Application.Current;
 				visualElement.Parent = new Application();
+				Xamarin.Forms.Application.Current = maintainApp;
 				var renderer = Platform.CreateRendererWithContext(visualElement, result);
 
 				renderer.View.ViewAttachedToWindow += result.OnViewAttachedToWindow;
