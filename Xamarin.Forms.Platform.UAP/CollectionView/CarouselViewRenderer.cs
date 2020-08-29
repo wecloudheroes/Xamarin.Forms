@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using UWPApp = Windows.UI.Xaml.Application;
-using UWPDataTemplate = Windows.UI.Xaml.DataTemplate;
-using WScrollBarVisibility = Windows.UI.Xaml.Controls.ScrollBarVisibility;
-using WScrollMode = Windows.UI.Xaml.Controls.ScrollMode;
-using WSnapPointsAlignment = Windows.UI.Xaml.Controls.Primitives.SnapPointsAlignment;
-using WSnapPointsType = Windows.UI.Xaml.Controls.SnapPointsType;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using UWPApp = Microsoft.UI.Xaml.Application;
+using UWPDataTemplate = Microsoft.UI.Xaml.DataTemplate;
+using WScrollBarVisibility = Microsoft.UI.Xaml.Controls.ScrollBarVisibility;
+using WScrollMode = Microsoft.UI.Xaml.Controls.ScrollMode;
+using WSnapPointsAlignment = Microsoft.UI.Xaml.Controls.Primitives.SnapPointsAlignment;
+using WSnapPointsType = Microsoft.UI.Xaml.Controls.SnapPointsType;
 
 namespace Xamarin.Forms.Platform.UWP
 {
@@ -29,7 +29,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 		UWPDataTemplate CarouselItemsViewTemplate => (UWPDataTemplate)UWPApp.Current.Resources["CarouselItemsViewDefaultTemplate"];
 
-		protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs changedProperty)
+		protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs changedProperty)
 		{
 			base.OnElementPropertyChanged(sender, changedProperty);
 
@@ -49,7 +49,7 @@ namespace Xamarin.Forms.Platform.UWP
 				UpdateFromCurrentItem();
 		}
 
-		protected override void HandleLayoutPropertyChanged(PropertyChangedEventArgs property)
+		protected override void HandleLayoutPropertyChanged(System.ComponentModel.PropertyChangedEventArgs property)
 		{
 			if (property.Is(LinearItemsLayout.ItemSpacingProperty))
 				UpdateItemSpacing();
@@ -172,7 +172,7 @@ namespace Xamarin.Forms.Platform.UWP
 			UpdatePosition(carouselPosition);
 		}
 
-		void OnListSizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+		void OnListSizeChanged(object sender, Microsoft.UI.Xaml.SizeChangedEventArgs e)
 		{
 			UpdateItemsSource();
 			UpdateSnapPointsType();
@@ -196,7 +196,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 		void UpdatePeekAreaInsets()
 		{
-			ListViewBase.Padding = new Windows.UI.Xaml.Thickness(Carousel.PeekAreaInsets.Left, Carousel.PeekAreaInsets.Top, Carousel.PeekAreaInsets.Right, Carousel.PeekAreaInsets.Bottom);
+			ListViewBase.Padding = WinUIHelpers.CreateThickness(Carousel.PeekAreaInsets.Left, Carousel.PeekAreaInsets.Top, Carousel.PeekAreaInsets.Right, Carousel.PeekAreaInsets.Bottom);
 			UpdateItemsSource();
 		}
 
@@ -232,10 +232,10 @@ namespace Xamarin.Forms.Platform.UWP
 
 			var itemSpacing = CarouselItemsLayout.ItemSpacing;
 			if (CarouselItemsLayout.Orientation == ItemsLayoutOrientation.Horizontal)
-				_scrollViewer.Padding = new Windows.UI.Xaml.Thickness(0, 0, itemSpacing, 0);
+				_scrollViewer.Padding = WinUIHelpers.CreateThickness(0, 0, itemSpacing, 0);
 
 			if (CarouselItemsLayout.Orientation == ItemsLayoutOrientation.Vertical)
-				_scrollViewer.Padding = new Windows.UI.Xaml.Thickness(0, 0, 0, itemSpacing);
+				_scrollViewer.Padding = WinUIHelpers.CreateThickness(0, 0, 0, itemSpacing);
 		}
 
 		void UpdateSnapPointsType()
@@ -390,13 +390,13 @@ namespace Xamarin.Forms.Platform.UWP
 
 		ListViewBase CreateCarouselListLayout(ItemsLayoutOrientation layoutOrientation)
 		{
-			Windows.UI.Xaml.Controls.ListView listView;
+			Microsoft.UI.Xaml.Controls.ListView listView;
 
 			if (layoutOrientation == ItemsLayoutOrientation.Horizontal)
 			{
 				listView = new FormsListView()
 				{
-					Style = (Windows.UI.Xaml.Style)UWPApp.Current.Resources["HorizontalCarouselListStyle"],
+					Style = (Microsoft.UI.Xaml.Style)UWPApp.Current.Resources["HorizontalCarouselListStyle"],
 					ItemsPanel = (ItemsPanelTemplate)UWPApp.Current.Resources["HorizontalListItemsPanel"]
 				};
 			}
@@ -404,11 +404,11 @@ namespace Xamarin.Forms.Platform.UWP
 			{
 				listView = new FormsListView()
 				{
-					Style = (Windows.UI.Xaml.Style)UWPApp.Current.Resources["VerticalCarouselListStyle"]
+					Style = (Microsoft.UI.Xaml.Style)UWPApp.Current.Resources["VerticalCarouselListStyle"]
 				};
 			}
 
-			listView.Padding = new Windows.UI.Xaml.Thickness(Carousel.PeekAreaInsets.Left, Carousel.PeekAreaInsets.Top, Carousel.PeekAreaInsets.Right, Carousel.PeekAreaInsets.Bottom);
+			listView.Padding = WinUIHelpers.CreateThickness(Carousel.PeekAreaInsets.Left, Carousel.PeekAreaInsets.Top, Carousel.PeekAreaInsets.Right, Carousel.PeekAreaInsets.Bottom);
 
 			return listView;
 		}
@@ -508,7 +508,7 @@ namespace Xamarin.Forms.Platform.UWP
 				return;
 			}
 
-			void ListViewLoaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+			void ListViewLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 			{
 				var lv = (ListViewBase)sender;
 				lv.Loaded -= ListViewLoaded;

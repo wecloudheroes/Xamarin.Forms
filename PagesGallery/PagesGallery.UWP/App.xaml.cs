@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
 using Xamarin.Forms;
-using Application = Windows.UI.Xaml.Application;
-using Frame = Windows.UI.Xaml.Controls.Frame;
+using Application = Microsoft.UI.Xaml.Application;
+using Frame = Microsoft.UI.Xaml.Controls.Frame;
 
 namespace PagesGallery.UWP
 {

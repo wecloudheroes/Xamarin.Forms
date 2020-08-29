@@ -2,13 +2,13 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Xamarin.Forms.Internals;
-using UwpApp = Windows.UI.Xaml.Application;
-using UwpDataTemplate = Windows.UI.Xaml.DataTemplate;
-using UwpScrollBarVisibility = Windows.UI.Xaml.Controls.ScrollBarVisibility;
+using UwpApp = Microsoft.UI.Xaml.Application;
+using UwpDataTemplate = Microsoft.UI.Xaml.DataTemplate;
+using UwpScrollBarVisibility = Microsoft.UI.Xaml.Controls.ScrollBarVisibility;
 
 namespace Xamarin.Forms.Platform.UWP
 {
@@ -45,7 +45,7 @@ namespace Xamarin.Forms.Platform.UWP
 			SetUpNewElement(args.NewElement);
 		}
 
-		protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs changedProperty)
+		protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs changedProperty)
 		{
 			base.OnElementPropertyChanged(sender, changedProperty);
 
@@ -73,7 +73,7 @@ namespace Xamarin.Forms.Platform.UWP
 		}
 
 		protected abstract ListViewBase SelectListViewBase();
-		protected abstract void HandleLayoutPropertyChanged(PropertyChangedEventArgs property);
+		protected abstract void HandleLayoutPropertyChanged(System.ComponentModel.PropertyChangedEventArgs property);
 		protected abstract IItemsLayout Layout { get; }
 
 		protected virtual void UpdateItemsSource()
@@ -169,7 +169,7 @@ namespace Xamarin.Forms.Platform.UWP
 			UpdateItemsSource();
 		}
 
-		void LayoutPropertyChanged(object sender, PropertyChangedEventArgs property)
+		void LayoutPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs property)
 		{
 			HandleLayoutPropertyChanged(property);
 		}
